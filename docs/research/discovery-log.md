@@ -30,6 +30,18 @@ A dated record of notable findings. This exists so that changing conclusions rem
 
 🟢 Confirmed in tested saves that item UIDs can remain useful across reloads for associating metadata with the same item instance.
 
+### Vanilla firearm DataAssets
+
+🟢 Analysed the clean SurrounDead 0.8 `Weapons/Firearms` DataAsset export containing 49 firearm definitions.
+
+🟢 Conventional firearm definitions contain paired floating-point bounds corresponding to `FirearmDamage`, `CriticalHitMultiplier`, `CriticalHitChance`, `FirearmRPM` and `DamageFallOff`.
+
+🟢 Cross-checked `DA_Crusher`: cooked ranges are Damage 54–64, Crit Multiplier 24–29, Crit Chance 12–22, RPM 600–700 and Falloff 110–120. A previously observed live Crusher instance (63 / 28 / 18 / 645 / 117) falls inside every corresponding range, validating the conventional record ordering and strongly supporting the interpretation as instance-generation bounds.
+
+🟡 The current working model is that firearm instances roll/generate their live stats from these bounds. The exact distribution, rounding behaviour and any rarity-stage modifiers remain to be established.
+
+🔵 Special weapons such as the Crossbow, Grenade Launcher, Flare Gun and Rocket Launcher do not all follow the ordinary five/four-record layout and require separate mapping.
+
 ### Failed / useful negative findings
 
 🔴 A direct property-iteration attempt against a live slot's `CustomData` did not expose the expected structure because the value surfaced through UE4SS as a `TrivialObject`. The approach was abandoned rather than treating the result as evidence that CustomData is empty.
