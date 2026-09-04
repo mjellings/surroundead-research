@@ -14,6 +14,8 @@ A dated record of notable findings. This exists so that changing conclusions rem
 
 🟢 Repeated hits on one zombie do not produce repeated progression awards: the correlated death boundary awards one weapon kill and one XP award when the enemy actually dies.
 
+🟡 Separate test environments exposed `XpMultiplierCalc` ranges around 4–8 and 40–60. Difficulty/world settings are a likely influence, but the exact upstream source remains unconfirmed.
+
 ### Equipped weapon and UID bridge
 
 🟢 Confirmed exact top-level firearm equipment containers: Primary=`CPrimary`, Secondary=`CSecondary`, Sidearm=`CPistol`.
@@ -22,7 +24,7 @@ A dated record of notable findings. This exists so that changing conclusions rem
 
 🟢 Confirmed vanilla `JSI_Slot:GetUniqueID` returns `UniqueServerID : FGuid` and `/Script/Engine.KismetGuidLibrary:Conv_GuidToString` converts it. UE4SS `FString:ToString()` exposes the actual Lua string; generic `tostring()` only exposes temporary wrapper/address-like values.
 
-🟢 A tested Crusher consistently resolved to `19BB6DEF-481C-1781-72EF-62A20CFED911`, including after a full game restart and reload of the same save. This established persistent per-item identity for the tested lifecycle.
+🟢 A tested Crusher consistently resolved to a stable per-item GUID across a full game restart and reload of the same save. This established persistent per-item identity for the tested lifecycle.
 
 ### Generic firearm attribution breakthrough
 
@@ -32,9 +34,9 @@ A dated record of notable findings. This exists so that changing conclusions rem
 
 It accepts `Slot : GameplayTag` and returns `Value : FGuid`, and is used by firearm durability paths.
 
-🟢 Runtime testing showed the returned GUID tracks the physical weapon being used. Tested mappings included Crusher=`19BB6DEF-481C-1781-72EF-62A20CFED911`, BenelliM4=`740F4C2F-4329-7F16-F907-A18F69C8BF53`, and BattleReadyGlock=`18E57E18-40C7-D733-8CFD-17B43F84391A`.
+🟢 Runtime testing showed the returned GUID tracks the physical weapon being used. Multiple weapon types and multiple instances were tested; different physical instances receive different GUIDs.
 
-🟢 The Crusher value exactly matched the independently established persistent `CPrimary → GetUniqueID` GUID. This cross-validates `GetEquipmentUID` as the physical weapon instance identity rather than an ammo/chamber/transient GUID.
+🟢 A Crusher value exactly matched the independently established persistent slot GUID. This cross-validates `GetEquipmentUID` as the physical weapon instance identity rather than an ammo/chamber/transient GUID.
 
 🟢 Generic firearm→persistent-GUID attribution is therefore confirmed across tested Primary, Secondary and Sidearm paths. The kill pipeline no longer needs to hardcode `CPrimary` to decide which weapon receives XP.
 
@@ -42,7 +44,7 @@ It accepts `Slot : GameplayTag` and returns `Value : FGuid`, and is used by fire
 
 🔴 `TryUseBullet_UID` is not a UFunction. It is an output/local name associated with the actual `/Game/JigSInventory/Jigsaw/Widgets/JSI_Slot.JSI_Slot_C:TryUseBullet` function. The latter outputs `Return`, `UID` and `ItemUsed` and appears ammunition-oriented. Earlier guessed `TryUseBullet_UID` hook paths are obsolete.
 
-### Weapon Progression — multi-weapon persistence
+### Weapon Progression — multi-weapon persistence and levelling
 
 🟢 Completed the generic persistent progression pipeline:
 
@@ -50,19 +52,44 @@ It accepts `Slot : GameplayTag` and returns `Value : FGuid`, and is used by fire
 
 🟢 Separate tested firearms produced separate progression records, and repeated non-lethal shots did not inflate kill counts.
 
-### Weapon Progression — levelling milestone
-
 🟢 Confirmed increasing progression thresholds using `100 + ((level - 1) * 50)`: Level 1→2 consumes 100 XP, 2→3 consumes 150, 3→4 consumes 200, and 4→5 consumes 250.
 
-🟢 Overflow XP is preserved correctly across level transitions. A single test sequence progressed a Crusher through multiple levels rather than merely proving the first Level 2 transition.
+🟢 Overflow XP is preserved correctly across level transitions. Full restart persistence is confirmed for multi-level progression, and the same physical weapon continued progressing from its saved level/XP/kill state after a complete SurrounDead restart.
 
-🟢 Full restart persistence is confirmed for multi-level progression. After completely restarting SurrounDead, the existing database was loaded and the same Crusher was recognised as already Level 4. Progression then continued from the saved XP/kill state.
+🟢 Configurable weapon-XP multiplier and per-level threshold overrides were also demonstrated. Weapon XP can be scaled independently of vanilla player XP.
 
-🟢 In the post-restart run, the Crusher continued to 217.560/250 XP at 11 kills, then the next kill awarded 54.185 XP, crossed Level 4→5, consumed the 250-XP threshold and preserved 21.744 overflow. The resulting record was Level 5, 21.744/300 XP, 12 kills, with `saved=true`.
+### Equipped live-slot lookup correction
 
-🟢 This confirms the core levelling engine: persistent weapon identity, actual-weapon attribution, confirmed-kill awards, vanilla XP mirroring, per-weapon XP/kills, escalating thresholds, overflow, multiple levels, database persistence, full restart persistence and continued progression after restart.
+🟢 `JigTryAddItemSomewhere` provides a known-good route for freshly added items: after a short delay, its UID can resolve to a healthy `JSI_Slot_C` with matching `ItemUniqueID` and readable `ItemStats`. It also exposes the player's `BP_JigMultiplayer` component.
 
-🔵 Weapon stat mutation remains intentionally disabled. The next milestone is one controlled stat upgrade on level-up through the game's UID-based stat update path, followed by save/restart verification on the exact physical weapon.
+🔴 Later testing corrected an overly broad conclusion about `FindItemByUID`. Passing an already-equipped Crusher's stable equipment GUID could produce a non-nil `Found` UObject wrapper, but the underlying object was not safe to dereference. Arbitrary field reads and even UObject identity/member calls caused native UE4SS access violations; Lua `pcall` cannot catch these native faults.
+
+🟢 A reliable replacement bridge was confirmed by enumerating live `JSI_Slot_C` objects, reading their proven-safe `ItemUniqueID`, and matching it against the exact `GetEquipmentUID` GUID. This repeatedly located the real live Crusher slot without crashing and exposed all five current firearm stats.
+
+### Weapon Progression — first verified live stat mutation
+
+🟢 **Major milestone:** the complete per-physical-weapon stat mutation bridge is now confirmed.
+
+The proven route is:
+
+```text
+weapon fires
+→ GetEquipmentUID
+→ exact physical weapon FGuid
+→ FindAllOf("JSI_Slot_C")
+→ exact ItemUniqueID match
+→ live weapon ItemStats
+→ exact GameplayTag match
+→ BP_JigComponent:UpdateStatByUID
+```
+
+🟢 In a tightly gated test against one exact Crusher, only `Jig.Stat.FirearmDamage` was selected and changed by +1, once during the run: `93.0 → 94.0`.
+
+🟢 A separate live-slot scan roughly 250 ms after the write independently read `FirearmDamage=94.0`. Critical-hit multiplier, critical-hit chance, RPM and damage falloff remained unchanged in the verification scan.
+
+🟢 This is the first independently verified controlled stat write in the original Weapon Progression research path and establishes the missing technical foundation for level-driven weapon stat upgrades.
+
+🔵 The inventory-add hook should no longer need to be a user-facing prerequisite. It remains useful as a diagnostic/fallback because it captures the player `BP_JigMultiplayer`; next architectural cleanup is to resolve that component directly.
 
 ### Hook registration timing
 
@@ -80,7 +107,7 @@ It accepts `Slot : GameplayTag` and returns `Value : FGuid`, and is used by fire
 
 🔴 Slot-object changes during switching are ambiguous because multiple top-level slots may refresh together.
 
-See `runtime-damage-and-death-hooks.md` for the consolidated technical details.
+See `runtime-damage-and-death-hooks.md` and `runtime-weapon-stats.md` for consolidated technical details.
 
 ## 2026-09-03
 
@@ -102,7 +129,7 @@ See `runtime-damage-and-death-hooks.md` for the consolidated technical details.
 
 ### Live runtime / save bridge
 
-🟢 Recorded that a live inventory item can be resolved by UID to a `JSI_Slot_C` object exposing `ItemStats`.
+🟢 Recorded that a live inventory item can be resolved by UID to a `JSI_Slot_C` object exposing `ItemStats` for the confirmed fresh-item route.
 
 🟢 Recorded runtime GameplayTags observed for firearm damage, critical values, RPM and damage falloff.
 
