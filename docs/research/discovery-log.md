@@ -2,6 +2,38 @@
 
 A dated record of notable findings. This exists so that changing conclusions remain traceable rather than being silently rewritten.
 
+## 2026-09-04
+
+### Runtime kill and XP pipeline
+
+🟢 Confirmed exact vanilla runtime paths for `BP_FirearmPickup:SERVER_DamageEvent`, `BP_MasterZombie:Death`, `LevellingComponent:AddXP` and `GameFunctionLibrary:XpMultiplierCalc`.
+
+🟢 For tested firearm kills, observed callback order is `XpMultiplierCalc → AddXP → Death → SERVER_DamageEvent`. The killed zombie can be correlated by UObject identity and the Death callback identifies the player as killer in the tested path.
+
+🟢 Vanilla zombie XP is a continuous floating-point value; tested 4–8 ranges produced non-integer values. This does not establish firearm stat-roll behaviour.
+
+### Equipped weapon and UID bridge
+
+🟢 Confirmed `JSIContainer:GetEquippedItemRef` and established that the top-level `CPrimary` `JSI_Slot_C` is the equipped weapon slot. Nested magazine/chamber slots also invoke inventory functions, so naïvely caching the latest slot is unsafe.
+
+🟢 Confirmed vanilla `JSI_Slot:GetUniqueID` returns `UniqueServerID : FGuid`.
+
+🟢 Confirmed `/Script/Engine.KismetGuidLibrary:Conv_GuidToString` converts the FGuid, and UE4SS `FString:ToString()` exposes the actual Lua string. Generic `tostring()` only exposes temporary wrapper/address-like values.
+
+🟢 A tested Crusher consistently resolves to `19BB6DEF-481C-1781-72EF-62A20CFED911`, including after a full game restart and reload of the same save. This establishes a persistent per-item identity for the tested lifecycle.
+
+### Weapon Progression persistence
+
+🟢 Completed the first persistent progression vertical slice: confirmed zombie kill → persistent equipped-weapon GUID → exact vanilla XP → per-weapon record → `data.db`.
+
+🟢 `data.db` persistence was verified across a complete game restart. The tested Crusher continued from 2 kills / 10.094894224405 XP to 3 kills / 16.650929206609 XP using the same GUID.
+
+🟢 High-frequency runtime hooks are now deliberately silent. Verbose probe logging was observed to affect game responsiveness, so normal logging is limited to startup/readiness, confirmed awards, level-ups and errors.
+
+🔴 Earlier direct reflected UID-property reads returned `TrivialObject`/wrapper representations rather than GUID contents. Likewise, generic `tostring()` on an FString returned changing wrapper values. These approaches are superseded and their outputs must not be persisted.
+
+See `runtime-damage-and-death-hooks.md` for the consolidated technical details.
+
 ## 2026-09-03
 
 ### Save-file documentation consolidated
