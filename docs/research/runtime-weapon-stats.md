@@ -34,6 +34,22 @@ The XP value observed at `AddXP` is the vanilla XP supplied by the game. This ma
 
 🟡 The upstream source of the game's XP scaling is not yet fully mapped. Separate environments have exposed `XpMultiplierCalc` ranges around 4–8 and 40–60, with correspondingly different vanilla `AddXP` values. Difficulty/world settings are a likely influence but are not yet confirmed as the exact source.
 
+## Resolving the player's live Jig component
+
+🟢 **Confirmed** — the player's live `BP_JigMultiplayer` component can be resolved directly from `BP_PlayerCharacter_C` without requiring an inventory-add event first.
+
+Tested route:
+
+```text
+FindFirstOf("BP_PlayerCharacter_C")
+        ↓
+player.BP_JigMultiplayer
+        ↓
+BP_JigComponent_C
+```
+
+This component is valid for `UpdateStatByUID` when paired with the correct native UID wrapper described below.
+
 ## Resolving a live inventory item
 
 🟢 **Confirmed for freshly added inventory items** — an inventory-add event exposes an item data asset, UID and the player's `BP_JigMultiplayer` component. With a short delay, `FindItemByUID` can resolve that fresh UID to a healthy live `JSI_Slot_C` whose `ItemUniqueID` matches the supplied GUID and whose `ItemStats` are readable.
@@ -51,7 +67,7 @@ The tested route is:
 ```text
 GetEquipmentUID
         ↓
-physical weapon FGuid
+physical weapon FGuid value
         ↓
 FindAllOf("JSI_Slot_C")
         ↓
@@ -66,7 +82,7 @@ ItemStats
 
 This bypasses the unsafe/stale `FindItemByUID` wrapper observed for the already-equipped weapon.
 
-🟢 The same Crusher slot was found repeatedly by this method before and during firing, so the result was not a one-off lookup coincidence.
+🟢 The same physical Crusher slot was found repeatedly by this method before and during firing.
 
 ## `ItemStats`
 
@@ -76,7 +92,7 @@ The serialized/property names encountered at runtime include UE-generated/hash-s
 
 This provides a useful bridge between the **serialized item representation** and the **live UObject representation**.
 
-A controlled Crusher test exposed five readable entries:
+A conventional Crusher exposed five readable entries:
 
 ```text
 Jig.Stat.FirearmDamage
@@ -85,6 +101,8 @@ Jig.Stat.CriticalHitChance
 Jig.Stat.FirearmRPM
 Jig.Stat.DamageFallOff
 ```
+
+A Hunting Rifle exposed only four in testing and had no `FirearmRPM` entry. Progression code must therefore treat the supported stat set as variable per physical weapon rather than assuming all firearms have five entries.
 
 ## GameplayTags
 
@@ -100,52 +118,134 @@ Jig.Stat.FirearmRPM
 Jig.Stat.DamageFallOff
 ```
 
-## Updating stats — first independently verified controlled write
+## Updating stats — native UID wrapper requirement
 
-🟢 **Confirmed 2026-09-04** — an exact physical Crusher was located through the live-slot bridge above, its exact `Jig.Stat.FirearmDamage` entry was selected, and the game's `BP_JigComponent:UpdateStatByUID` path was called with the same physical weapon GUID and GameplayTag.
+🟢 **Confirmed 2026-09-05** — `BP_JigComponent:UpdateStatByUID` is sensitive not only to the GUID value but to the native `FGuid` wrapper supplied to it.
 
-The controlled test changed only FirearmDamage by +1, once during the run:
+A controlled A/B test used the same Crusher GUID value through two different wrappers:
 
-```text
-FirearmDamage: 93.0 → 94.0
-```
+- `GetEquipmentUID` returned an `FGuid` wrapper that correctly identified the physical weapon but **did not mutate** its stat.
+- The matching live `JSI_Slot_C.ItemUniqueID` wrapper successfully changed the stat and independent delayed readback confirmed the new value.
 
-A separate live-slot scan approximately 250 ms after the update independently read the value back as `94.0`. The other four observed firearm stats remained unchanged in that verification scan.
-
-This confirms the full runtime bridge needed for per-physical-weapon stat progression:
+This yields the current known-good mutation route:
 
 ```text
 weapon fires
 → GetEquipmentUID
-→ physical weapon GUID
-→ match live JSI_Slot_C.ItemUniqueID
+→ physical weapon GUID value
+→ direct player BP_JigMultiplayer
+→ FindAllOf("JSI_Slot_C")
+→ exact ItemUniqueID GUID-value match
+→ retain that live slot.ItemUniqueID FGuid wrapper
 → locate ItemStats entry by GameplayTag
-→ UpdateStatByUID
-→ re-read changed value from live slot
+→ BP_JigComponent:UpdateStatByUID(slot.ItemUniqueID, tag, target)
+→ independent delayed live readback
 ```
 
-## Persistence
+The practical rule is:
 
-🟢 **Confirmed from earlier runtime/save testing** — weapon stat modifications made through the live game path can survive a save/restart cycle. SurrounDead itself serializes resulting `ItemStats` values into the save.
+> `GetEquipmentUID` tells us **which weapon**. `JSI_Slot_C.ItemUniqueID` supplies the **native FGuid wrapper required to modify it**.
 
-🟢 **Confirmed in tested saves** — item UIDs were sufficiently stable across reloads to associate separate metadata with the same weapon instance.
+## Weapon Progression stat model
 
-This leads to a useful architectural lesson for future original mods/tools: if the game already persists modified item stats, external persistence should avoid blindly reapplying changes after reload, otherwise values can compound.
+🟢 **Confirmed 2026-09-05** — the original Weapon Progression research build now supports permanent per-physical-weapon stat rewards driven by weapon level-ups.
+
+Current tested reward set:
+
+```text
+Damage                 +2%
+Critical Hit Chance    +1 point
+Critical Hit Multiplier +2 points
+RPM                    +2%
+Damage Falloff         +2%
+```
+
+Percentage stats are reconstructed deterministically from their captured base value and upgrade count rather than by repeatedly multiplying the current live value. Point-based stats use base + points × count.
+
+🟢 One eligible stat is awarded per weapon level, saved before runtime mutation, and the same stat is not selected on consecutive levels when alternatives exist.
+
+🟢 Multiple level-ups, overflow XP, per-weapon kill counts and XP all use the same physical GUID record.
+
+## Persistence — corrected model
+
+🔴 **Correction to the earlier working assumption:** runtime stat writes made through `UpdateStatByUID` were later shown **not to survive a full SurrounDead restart by themselves** in the tested path. After restart, the same physical Crusher GUID returned with its original rolled/base values.
+
+🟢 **Confirmed 2026-09-05** — Weapon Progression therefore uses **mod-owned persistence**. `data.db` is authoritative for the earned upgrade layer, while SurrounDead supplies the weapon's original rolled/base stats after a full restart.
+
+The proven restart sequence is:
+
+```text
+original live weapon stats
+→ capture base stats once
+→ earn XP and levels
+→ persist upgrade counters in data.db
+→ mutate live weapon
+→ full game exit
+→ restart same save
+→ same physical GUID resolves
+→ game supplies original/base values
+→ Weapon Progression reconstructs targets from base + saved upgrade counters
+→ UpdateStatByUID using live slot.ItemUniqueID wrapper
+→ delayed verification confirms reconstructed values
+```
+
+🟢 Full restart reconstruction has been independently verified for the same Crusher, including subsequent post-restart XP gain, another level-up and another permanent stat reward.
+
+## Important `data.db` reset rule
+
+⚠️ **Confirmed testing caveat — 2026-09-05:** deleting/resetting `data.db` while SurrounDead is still running does **not** revert stat mutations already present on live weapon objects in memory.
+
+If the mod is then reloaded without restarting the game, a fresh database has no prior base-stat record and will correctly-but-unhelpfully capture the currently modified live values as the new base values. Any subsequent progression will therefore stack from those already-upgraded values.
+
+Example from a deliberate test reset: the same Crusher's fresh database captured modified runtime values such as Damage `94.86`, Critical Multiplier `29`, RPM `977.67` and Damage Falloff `85.833`, rather than its earlier original values.
+
+Therefore:
+
+> **When deliberately resetting Weapon Progression's `data.db`, fully exit and restart SurrounDead before allowing the mod to recapture weapon base stats.**
+
+This rule applies specifically to resetting persistence. Using UE4SS **Reload All Mods** for normal `main.lua` development/testing is fine and has been used successfully; it simply does not recreate the game's live weapon objects or revert their current runtime stats.
+
+## Verification behaviour
+
+🟢 A delayed independent `JSI_Slot_C` readback verifies each expected target after mutation.
+
+🟢 Verification scheduling is debounced per physical weapon GUID. Multiple stat writes during one reconstruction pass now schedule one verification scan rather than one scan per modified stat.
+
+## Native level-up notifications
+
+🟢 **Confirmed 2026-09-05** — Weapon Progression can use SurrounDead's native right-side notification UI.
+
+The safe text path is:
+
+```text
+Lua string
+→ /Script/Engine.KismetTextLibrary:Conv_StringToText
+→ valid Unreal FText
+→ GameFunctionLibrary:CreateNotificationUI
+→ HUD_Game:Notification
+→ native SurrounDead notification
+```
+
+Directly passing a Lua string into an Unreal `FText` parameter caused a native UE4SS access violation during testing and should be avoided.
+
+A production test successfully displayed dynamically generated messages such as:
+
+```text
+Crusher reached Level 8 - Critical Multiplier +2
+```
 
 ## Inventory-add hook: current role
 
 🟢 `JigTryAddItemSomewhere` was invaluable during reverse engineering because it supplied a known-good fresh slot/UID and exposed the player's `BP_JigMultiplayer` component.
 
-🔵 It should not need to remain a user-facing prerequisite for weapon progression. The remaining architectural cleanup is to resolve the player's `BP_JigMultiplayer` directly, allowing normal progression/stat updates without requiring an inventory-add event first. The inventory-add hook can then remain as a diagnostic/fallback route.
+🟢 It is no longer required for normal Weapon Progression operation. Direct player-Jig resolution plus the live `JSI_Slot_C` scan now provide the production path.
 
 ## Open research
 
-🔵 Resolve the player's `BP_JigMultiplayer` component directly without relying on an inventory-add event.
-
-🔵 Turn the proven controlled stat mutation into a generic level-up upgrade system with configurable stat choices/increments/caps.
-
 🔵 Determine the exact source of vanilla XP scaling/world-setting differences.
 
-🔵 Map additional GameplayTags and the full `S_ItemStat` structure.
+🔵 Map additional GameplayTags and unusual/special-weapon stat layouts.
 
 🔵 Strengthen the mapping between live `JSI_Slot_C` objects and their exact serialized `ItemInfo` records.
+
+🔵 Test the production progression path across more firearm families, repeated weapon switching, long play sessions and additional full restart cycles.
