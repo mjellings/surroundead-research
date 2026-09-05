@@ -2,6 +2,114 @@
 
 A dated record of notable findings. This exists so that changing conclusions remain traceable rather than being silently rewritten.
 
+## 2026-09-05
+
+### Weapon Progression — production persistence architecture confirmed
+
+🟢 Full clean persistence testing proved the current mod-owned architecture end to end on the same physical Crusher.
+
+Proven sequence:
+
+```text
+fresh data.db
+→ capture original rolled stats
+→ earn weapon XP
+→ level weapon
+→ award one permanent stat upgrade
+→ save reward to data.db
+→ mutate live physical weapon
+→ verify live target
+→ fully exit SurrounDead
+→ restart same save
+→ same physical GUID resolves
+→ game presents original/base values again
+→ reconstruct every earned target from data.db
+→ mutate using live JSI_Slot_C.ItemUniqueID wrapper
+→ delayed independent readback verifies all reconstructed targets
+```
+
+🟢 The same weapon then continued gaining XP after restart and successfully received another permanent stat reward, confirming that restart reconstruction and subsequent progression coexist correctly.
+
+🔴 This corrects the earlier working assumption that the game's own save path persisted these runtime stat mutations in the tested path. Weapon Progression's `data.db` is now the authoritative upgrade layer.
+
+### `UpdateStatByUID` native-wrapper breakthrough
+
+🟢 A controlled A/B test proved that two `FGuid` wrappers representing the same GUID value are not interchangeable for mutation.
+
+- `GetEquipmentUID` wrapper: correctly identifies the physical weapon, but stat mutation did not take effect.
+- matched live `JSI_Slot_C.ItemUniqueID` wrapper: stat mutation succeeded and independent delayed readback confirmed the new value.
+
+Current rule:
+
+> `GetEquipmentUID` identifies **which weapon**; the matched live slot's `ItemUniqueID` wrapper is what must be passed to `UpdateStatByUID`.
+
+🟢 Directly resolving `BP_PlayerCharacter_C.BP_JigMultiplayer` is a valid mutation component, removing the old inventory-pickup prerequisite.
+
+### Generic firearm stat sets
+
+🟢 Tested conventional firearms share the same live-resolution route, but their stat sets are not identical.
+
+🟢 Crusher exposed five entries: Damage, Critical Hit Multiplier, Critical Hit Chance, RPM and Damage Falloff.
+
+🟢 Hunting Rifle exposed four and had no RPM entry. Progression must therefore enumerate the actual stat set on each weapon rather than assuming five supported stats.
+
+### Verification cleanup
+
+🟢 Delayed live verification remains part of the stat-write safety path.
+
+🟢 Verification scheduling is now debounced per physical weapon GUID. A reconstruction that modifies several stats schedules one independent verification scan instead of several redundant full `JSI_Slot_C` scans.
+
+### Native Weapon Progression notifications
+
+🟢 SurrounDead's native right-side notification path was mapped and successfully used by Weapon Progression.
+
+Relevant path:
+
+```text
+KismetTextLibrary:Conv_StringToText
+→ GameFunctionLibrary:CreateNotificationUI
+→ HUD_Game:Notification
+→ native notification widget
+```
+
+🟢 A genuine dynamically generated notification was observed in game, including:
+
+```text
+Crusher reached Level 8 - Critical Multiplier +2
+```
+
+🔴 Direct Lua-string coercion into an Unreal `FText` parameter caused a native UE4SS access violation. Using `KismetTextLibrary:Conv_StringToText` to construct a real `FText` is the confirmed safe route.
+
+### Fresh-database reset caveat
+
+🟢 A deliberate `data.db` reset while SurrounDead was still running exposed an important testing/development rule.
+
+Deleting the database does not revert stat modifications already present on live weapon objects in memory. Reloading the mod immediately after the reset therefore causes the fresh database to capture the currently modified live values as its new base values.
+
+In one test, the same Crusher recaptured upgraded runtime values such as Damage `94.86`, Critical Multiplier `29`, RPM `977.67` and Damage Falloff `85.833` instead of its earlier original values.
+
+Therefore:
+
+> **If `data.db` is deliberately reset, fully exit and restart SurrounDead before allowing Weapon Progression to recapture base stats.**
+
+🟢 This does not make UE4SS `Reload All Mods` unsuitable for normal development. Reloading `main.lua` in-place has been used successfully and is substantially faster; the full restart is specifically required when resetting the persistence database because the live game objects otherwise retain their current modified state.
+
+### Clean DB progression test after reset
+
+🟢 A fresh progression record successfully advanced the tested Crusher through Levels 2, 3 and 4.
+
+Observed rewards were:
+
+```text
+L2 → Damage +2%
+L3 → RPM +2%
+L4 → Damage +2%
+```
+
+This naturally demonstrated the no-consecutive-same-stat rule: Damage was allowed again at L4 because RPM had been awarded at L3.
+
+🟢 Each reward was saved, applied, displayed through a native level-up toast and independently verified in the live stat array.
+
 ## 2026-09-04
 
 ### Runtime kill and XP pipeline
@@ -133,7 +241,7 @@ See `runtime-damage-and-death-hooks.md` and `runtime-weapon-stats.md` for consol
 
 🟢 Recorded runtime GameplayTags observed for firearm damage, critical values, RPM and damage falloff.
 
-🟢 Confirmed that changes made through the game's live UID/stat update path are subsequently persisted by SurrounDead itself in save data.
+🟡 An early working assumption was that live UID/stat updates would be persisted by SurrounDead itself. Later full-restart testing on 2026-09-05 corrected this for the tested Weapon Progression path: the game supplied original/base values again and mod-owned `data.db` reconstruction was required.
 
 🟢 Confirmed in tested saves that item UIDs can remain useful across reloads for associating metadata with the same item instance.
 
