@@ -19,10 +19,16 @@ This directory separates findings by confidence and keeps unresolved questions v
 
 🟢 Live inventory slots expose weapon stat data corresponding to in-game values.
 
-🟢 Runtime stat changes made through SurrounDead's exposed update path survive a normal save/reload because the game serializes the modified item stats.
+🟢 Physical firearms can be tracked by GUID, resolved to live `JSI_Slot_C` objects and modified through `BP_JigComponent:UpdateStatByUID` when the live slot's native `ItemUniqueID` wrapper is used.
+
+🟢 Runtime stat writes in the tested Weapon Progression path do **not** persist through a full SurrounDead restart by themselves. Mod-owned persistence and deterministic reconstruction from captured base stats are the confirmed production model.
+
+🟢 More than one live `JSI_Slot_C` may carry the same physical weapon GUID. Zero-stat/stub matches exist, so GUID equality alone is not sufficient; populated `ItemStats` must be part of candidate selection.
+
+🟢 SurrounDead's native firearm tooltip can be extended through its existing UMG widgets. Numeric rows are `BP_StatW_C`, text rows are `BP_StatTextW_C`, and additional native-looking Level / XP / Kills rows have been demonstrated in `TextStatsGrid`.
 
 🟡 `MainJigContainers` appears to use a less obvious serialization layout than its declared ArrayProperty count initially suggests.
 
-🔵 Equipment mapping, attachments, complete container hierarchy, enemy death events and equipped-weapon attribution remain open targets.
+🔵 Remaining targets include stronger authority rules for duplicate populated live slots, exact vanilla XP-scaling provenance, more special-weapon layouts, equipment/attachment save mapping and broader tooltip/widget mapping outside conventional firearms.
 
-See the [Discovery Log](discovery-log.md) for dated findings and [Runtime Weapon Stats](runtime-weapon-stats.md) for the bridge between save-file and live-runtime research.
+See the [Discovery Log](discovery-log.md), [Runtime Weapon Stats](runtime-weapon-stats.md) and [Runtime Tooltip / UI Research](runtime-tooltip-ui.md) for consolidated technical details.
