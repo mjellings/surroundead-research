@@ -2,6 +2,61 @@
 
 A dated record of notable findings. This exists so that changing conclusions remain traceable rather than being silently rewritten.
 
+## 2026-09-07
+
+### Standalone Lua-created UMG confirmed
+
+🟢 UIResearch proved that SurrounDead 0.8 / Unreal Engine 5.6 can host a complete standalone UMG interface assembled directly from UE4SS Lua, without requiring a custom cooked Widget Blueprint or `.pak`.
+
+The proven construction route is:
+
+```text
+StaticConstructObject
+→ UserWidget
+→ WidgetTree
+→ CanvasPanel root
+→ native UMG child widgets
+→ AddToViewport
+```
+
+🟢 Tested native classes include `UserWidget`, `WidgetTree`, `CanvasPanel`, `Border`, `TextBlock` and `ProgressBar`.
+
+🟢 Canvas children can be positioned and sized through the returned canvas slot. Text styling, border colours, progress fill/background styling and widget opacity can all be changed from Lua in the tested runtime.
+
+🟢 The safe FText rule remains unchanged: Lua strings are converted with `KismetTextLibrary:Conv_StringToText` before `TextBlock:SetText`.
+
+### Reusable Weapon Progression status card
+
+🟢 The UIResearch result was integrated into a reusable presentation-only `ui.lua` module used by the Weapon Progression development build.
+
+The UI layer owns only widget construction/rendering. `main.lua` supplies a compact state object containing values such as weapon name, Level, XP percentage and status text. No GUID resolution, database access or XP formulae live inside the UI module.
+
+🟢 A compact native-style status card now displays the active weapon, Level, XP percentage and a native UMG progress bar. It can be opened with a keybind, refreshed live and removed cleanly from the viewport.
+
+🟢 A three-second popup lifecycle was demonstrated using generation-token invalidation for delayed close callbacks. A genuine weapon switch restarts the timer; routine combat/inventory callbacks do not.
+
+### Active-weapon UI bridge
+
+🟢 Useful active-equipment callbacks were confirmed for UI state:
+
+```text
+BP_JigHelperComp:GetActiveWeapon
+BP_JigHelperComp:GetActiveWeaponSlot
+JSIContainer:GetEquippedItemRef
+```
+
+🟢 Active slot tags can be mapped to known player equipment containers and then to physical `JSI_Slot_C.ItemUniqueID` values.
+
+🟢 Combat and switching can expose transient/alternate slot candidates, so the UI bridge must not blindly replace a known-good active physical UID on every callback. The tested implementation queues ambiguous candidates and promotes them once the active-weapon name confirms the switch.
+
+🟢 A one-time top-level live-slot scan can recover the active DB-backed weapon when those callbacks have not fired since the Lua mod loaded.
+
+### Architectural consequence
+
+🟢 A custom cooked Blueprint/UMG `.pak` is **not required** for ordinary standalone SurrounDead mod panels built from standard native UMG controls.
+
+The Blueprint/cooked-asset route remains a possible future option for custom art, complex animations or controls not conveniently available through Lua, but it is no longer the baseline requirement for dedicated mod UI.
+
 ## 2026-09-05
 
 ### Weapon Progression — production persistence architecture confirmed
