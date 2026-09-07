@@ -4,6 +4,8 @@
 
 This page records reusable findings about SurrounDead's native firearm tooltip widgets, safe runtime text mutation, and a related live-slot selection caveat discovered during the same investigation.
 
+For the later result proving that a complete standalone `UserWidget` can be assembled directly from Lua, see [Runtime Standalone UMG Research](runtime-standalone-ui.md).
+
 ## Hover-tooltip entry point
 
 🟢 **Confirmed 2026-09-05** — the native item hover tooltip updates through:
@@ -192,6 +194,22 @@ The native tooltip successfully showed:
 
 The Hunting Rifle correctly lacked an RPM row because that physical weapon did not expose an RPM stat, reinforcing that tooltip/stat logic must remain data-driven rather than assuming five firearm stats.
 
+## Tooltip extension versus standalone UI
+
+🟢 **Confirmed 2026-09-07** — extending SurrounDead's existing tooltip is no longer the only demonstrated Lua UI technique.
+
+The tooltip route remains useful when the information belongs naturally inside an existing game panel and native visual consistency is desired. Separately, a complete mod-owned `UserWidget` + `WidgetTree` can now be constructed directly from Lua and added to the viewport. That later route is documented in [Runtime Standalone UMG Research](runtime-standalone-ui.md).
+
+The two techniques are complementary:
+
+```text
+existing game context needed
+→ extend existing SurrounDead widget
+
+dedicated mod panel needed
+→ build standalone Lua UMG widget tree
+```
+
 ## Reusable implementation rules
 
 1. Identify physical items by stable GUID value, but do not assume one GUID maps to only one current `JSI_Slot_C` UObject.
@@ -200,6 +218,7 @@ The Hunting Rifle correctly lacked an RPM row because that physical weapon did n
 4. When creating Blueprint widgets dynamically, apply final custom text after Blueprint `Construct` has run.
 5. Build real `FText` values through Unreal's text library rather than relying on Lua-string coercion.
 6. Keep calculated/storage precision separate from presentation precision; Weapon Progression retains full internal values while the tooltip rounds for readability.
+7. Use a standalone Lua-created widget tree when a dedicated panel is more appropriate than extending an existing game widget.
 
 ## Open research
 
@@ -208,3 +227,5 @@ The Hunting Rifle correctly lacked an RPM row because that physical weapon did n
 🔵 Determine a stronger authoritative rule when several populated `JSI_Slot_C` candidates share one GUID.
 
 🔵 Map additional native tooltip panels and reusable row/widget classes for future mods.
+
+🔵 Continue standalone UMG research for interactive controls, lists, images and input/focus handling; see [Runtime Standalone UMG Research](runtime-standalone-ui.md).
