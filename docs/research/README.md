@@ -27,8 +27,12 @@ This directory separates findings by confidence and keeps unresolved questions v
 
 🟢 SurrounDead's native firearm tooltip can be extended through its existing UMG widgets. Numeric rows are `BP_StatW_C`, text rows are `BP_StatTextW_C`, and additional native-looking Level / XP / Kills rows have been demonstrated in `TextStatsGrid`.
 
+🟢 A complete standalone `UserWidget` can also be created directly from UE4SS Lua on SurrounDead 0.8 without a custom Blueprint or cooked `.pak`. `UserWidget`, `WidgetTree`, `CanvasPanel`, `Border`, `TextBlock` and `ProgressBar` have all been constructed and added to the viewport at runtime.
+
+🟢 The tested standalone UI keeps presentation separate from authoritative mod state through a provider/state-table model and can be opened, refreshed and removed cleanly at runtime.
+
 🟡 `MainJigContainers` appears to use a less obvious serialization layout than its declared ArrayProperty count initially suggests.
 
-🔵 Remaining targets include stronger authority rules for duplicate populated live slots, exact vanilla XP-scaling provenance, more special-weapon layouts, equipment/attachment save mapping and broader tooltip/widget mapping outside conventional firearms.
+🔵 Remaining targets include stronger authority rules for duplicate populated live slots, exact vanilla XP-scaling provenance, more special-weapon layouts, equipment/attachment save mapping, broader tooltip/widget mapping, and interactive standalone UMG controls such as buttons, lists, images and focus/input handling.
 
-See the [Discovery Log](discovery-log.md), [Runtime Weapon Stats](runtime-weapon-stats.md) and [Runtime Tooltip / UI Research](runtime-tooltip-ui.md) for consolidated technical details.
+See the [Discovery Log](discovery-log.md), [Runtime Weapon Stats](runtime-weapon-stats.md), [Runtime Tooltip / UI Research](runtime-tooltip-ui.md) and [Standalone Lua UMG Research](runtime-standalone-ui.md) for consolidated technical details.
