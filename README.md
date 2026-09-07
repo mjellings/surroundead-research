@@ -10,7 +10,7 @@ This repository collects practical findings from save-file reverse engineering a
 ## What's here?
 
 - **Save File Format** — save locations, EMSH, Oodle blocks, Unreal property serialization, `Player.sav`, `PlayerInfo.sav`, `Slot.sav`, inventory and container structures.
-- **UE4SS / Runtime Research** — reflection, hooks, inventory objects, weapon stats, GameplayTags, native tooltip widgets and persistence observations.
+- **UE4SS / Runtime Research** — reflection, hooks, inventory objects, weapon stats, GameplayTags, native tooltip widgets, standalone Lua-created UMG and persistence observations.
 - **Research Notes** — confirmed discoveries, probable findings, failed approaches, open questions and a dated discovery log.
 
 ## Confidence markers
@@ -32,6 +32,7 @@ Failed experiments are intentionally retained. Knowing what *doesn't* work can b
 - [Discovery log](docs/research/discovery-log.md)
 - [Runtime weapon-stat research](docs/research/runtime-weapon-stats.md)
 - [Runtime tooltip / UI research](docs/research/runtime-tooltip-ui.md)
+- [Standalone Lua UMG research](docs/research/runtime-standalone-ui.md)
 
 ## Third-party mods
 
