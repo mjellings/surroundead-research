@@ -2,6 +2,20 @@
 
 A dated record of notable findings. This exists so that changing conclusions remain traceable rather than being silently rewritten.
 
+## 2026-09-08
+
+### Weapon handling fields verified in-game
+
+WeaponHandlingResearch moved selected cooked-field hypotheses into live testing on HK416 and Benelli M4. Live component writes were read back during firing; the tester supplied visual observations:
+
+- HK416 vertical `−2` produced stronger upward kick. Positive vertical remains untested.
+- HK416 horizontal `+2` pulled left and `−2` pulled right, correcting the initial sign assumption.
+- With both base recoil axes and vertical deviation zero, horizontal deviation `1` introduced varying sideways aim movement compared with `0`, in ADS and hip-fire. Single shots returned towards the starting aim; rapid fire wandered. The recovery mechanism remains unresolved.
+- HK416 HipfireSpread `3` scattered hip-fire impacts; `0` produced almost pinpoint grouping, with recoil/deviation zero.
+- Benelli M4 ShootingSpread `0` gave tight hip-fire grouping and `3` widened it, with other recoil/spread controls zero and shotgun bounds unchanged at `−20000 / +20000`. This disproves an ADS-only interpretation for this field on the tested shotgun, but does not establish its formula or rifle behaviour.
+
+The [weapon reference](weapons.md#runtime-tests--2026-09-08) now holds the canonical test table, live baselines, source-log timestamps and limitations. Its original cooked tables remain explicit serialized values rather than silently filled-in inherited defaults. Exact units, intermediate scaling, vertical deviation, recoil timing/reset controls, shotgun bounds, attachment interactions and handling persistence remain open.
+
 ## 2026-09-07
 
 ### Standalone Lua-created UMG confirmed

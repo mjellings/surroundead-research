@@ -7,7 +7,7 @@ Vanilla **SurrounDead 0.8 / UE5.6** research, compiled 2026-09-08. Covers **49 f
 ## How to read the tables
 
 - **Base stats are generation ranges**, not a fixed starting value for every copy. Damage, crit, RPM and falloff below are the canonical tables for the 45 conventional-weapon records. [Weapon DataAsset Research](weapon-data-assets.md) preserves their extraction method and live Crusher cross-check. The exact roll distribution remains unresolved.
-- **Recoil/spread numbers are explicit cooked component values**, decoded from the uploaded `Items.zip` with the supplied UE5.6 `.usmap`. These are static asset observations, not proof of final in-game values or successful UE4SS writes.
+- **Recoil/spread numbers are explicit cooked component values**, decoded from the uploaded `Items.zip` with the supplied UE5.6 `.usmap`. These tables remain static asset observations; selected live values, UE4SS writes and gameplay effects were subsequently verified in the [runtime tests](#runtime-tests--2026-09-08).
 - **`—` means absent from the inspected record / unresolved**, never an assumed zero. A component can inherit a value. Shared defaults are listed separately below; the complete archetype chain and runtime initialization have not been resolved.
 - Recoil keeps its original sign. Values are internal units; no degree, percentage, metre or critical-damage formula is asserted here. `RecoilRate` is not weapon RPM. Shotgun damage is not asserted to be total damage across all pellets.
 - Names use asset identifiers for reliable lookup. `BarrettM821` is the DataAsset identifier; its pickup is `BP_BarrettM82Pickup`.
@@ -16,24 +16,29 @@ Each category has a base-stat table followed by a handling table, avoiding one e
 
 ## What spread and deviation mean
 
-The field names and serialized numbers are observed facts. The gameplay interpretations below are **working hypotheses from those names and their placement in the weapon component**, not traced Blueprint formulas or measured effects.
+Initial interpretations came from field names and cooked values. **2026-09-08 runtime tests now establish several effects on the HK416 and Benelli M4.** Conclusions combine live property logs with the tester's visual observations; the logs alone do not measure aim movement or impact positions.
 
-| Concept | What it likely controls | What changing it might achieve |
+| Field | Demonstrated effect | Scope / remaining limit |
 | --- | --- | --- |
-| Spread | How far a shot can depart from the aim direction. | A smaller spread parameter may tighten shot grouping, even while aim stays still. |
-| Vertical / horizontal recoil | The up/down and left/right kick associated with firing. | Reducing the magnitude may reduce aim displacement after a shot. |
-| Vertical / horizontal random deviation | Random variation in the recoil on each axis; these fields are inside `RecoilData`. | A smaller deviation may make kick more consistent from shot to shot, without removing the underlying recoil. |
+| `RecoilVertical` | HK416 `−2` caused much stronger upward kick than baseline `−0.05`. | Positive vertical recoil has not been tested. |
+| `RecoilHorizontal` | HK416 `+2` pulled left; `−2` pulled right. | Directions refer to observed player aim movement in this test. |
+| `HorizontalRandomDeviation` | With base recoil and vertical deviation zero, `1` introduced varying left/right aim movement compared with `0`. | Demonstrated while ADS and hip-firing; random distribution and bounds remain unknown. |
+| `VerticalRandomDeviation` | Not independently isolated yet. | Vertical counterpart is still an interpretation from its name. |
+| `HipfireSpread` | HK416 hip-fire impacts scattered at `3`, but became almost pinpoint at `0`, with recoil/deviation zero. | Intermediate scaling and ADS interaction remain unmeasured. |
+| `ShootingSpread` | Benelli M4 hip-fire grouping was tight at `0` and widened at `3`, with hip-fire spread and recoil/deviation zero. | This is **not an ADS-only field** on the tested shotgun. ADS behaviour and effects on ordinary rifles remain untested. |
 
-For example, **less spread** would be an accuracy reward; **less recoil deviation** would be a predictability reward. They should not be presented as interchangeable until firing tests establish how this game uses them.
+This supports separate progression concepts: lower directional recoil for less kick, lower horizontal deviation for more predictable aim, and reduced spread for tighter impact grouping. It does not yet establish linear improvement for intermediate values.
 
 ### Reading the numbers
 
-- **`HipfireSpread`** suggests spread when firing without aiming down sights. A value of `4` is a raw parameter, not a confirmed 4-degree cone or 4% inaccuracy.
-- **`ShootingSpread`** is a separate field. Its name does not establish that it is ADS-only spread, or whether it adds to, multiplies, or replaces hip-fire spread. Only four examined weapon exports explicitly override it, all shotgun-type weapons; omissions elsewhere do not prove perfect accuracy.
-- **`VerticalRandomDeviation` / `HorizontalRandomDeviation`** suggest random recoil variation on their respective axes. We have not established the sampling distribution, whether the bounds are ± the value, or whether variation is added or multiplied. Do not calculate a recoil interval from these numbers yet.
-- **Signed recoil:** compare magnitude when discussing kick. Moving `−0.35` toward zero to `−0.315` is a 10% reduction in the parameter's magnitude. Making it more negative would increase that magnitude. The observed sign alone does not establish the camera's direction of movement.
-- **Shotgun min/max spread:** these are another pair of signed bounds. A narrower pair suggests a tighter pellet pattern, but their coordinate space, units and relationship with the other spread fields are unresolved. `−17500 / 17500` is not a known angle or distance.
-- **`RecoilRate` / `ResetRecoilDivider`:** their names suggest recoil timing/recovery behaviour. We have not established whether raising or lowering either improves handling.
+- All handling values remain **raw internal parameters**, not established degrees, percentages or distances.
+- Recoil magnitude and sign are separate. Moving `−0.35` to `−0.315` reduces magnitude by 10% while preserving sign; it does not prove 10% less visible kick.
+- On the HK416, negative vertical recoil produced upward movement; positive horizontal produced leftward movement and negative horizontal rightward movement. Earlier assumptions of positive horizontal meaning right were contradicted by the tests. Positive vertical meaning down is still unverified.
+- Horizontal deviation can produce sideways aim movement with base horizontal recoil at zero. This rules out treating it merely as a percentage of that zero base parameter under the tested conditions. It does not identify the actual formula, sampling distribution or ± bounds.
+- The tester observed sideways jumps followed by a return towards the starting aim position with spaced single shots, and wandering aim during rapid fire. Recovery between shots is consistent with that behaviour, but the timing mechanism has not been isolated.
+- Only four cooked weapon exports explicitly override `ShootingSpread`: Exterminator `2`, Benelli M4 `3`, PumpActionShotgun `3.25`, SawnOffShotgun `3.5`; all enable `UseShotgunSpread?`. This does not establish that rifles ignore the field.
+- Benelli shotgun bounds remained `−20000 / +20000` even when `ShootingSpread=0` produced tight grouping. The bounds and shooting-spread field may interact; independent additive spread and any particular multiplication formula are not established.
+- `RecoilRate` and `ResetRecoilDivider` still require isolated timing/recovery tests. Their names alone do not establish the direction of improvement.
 
 ### A concrete comparison
 
@@ -41,7 +46,55 @@ HK416 explicitly stores vertical/horizontal recoil of `−0.05 / 0.1`, with devi
 
 ### What still needs testing
 
-Hold the weapon, attachments, stance and firing conditions constant. Capture the live component values, then vary one field at a time: measure shot grouping separately from aim/camera movement and recovery. Test hip-fire and ADS separately, and compare repeated shots rather than one shot. Trace the consuming Blueprint logic to establish units and formulas. Until then, a “10% reduction” means 10% of the chosen parameter, not a verified 10% improvement in accuracy or handling.
+Positive vertical recoil, vertical deviation, the effects of `RecoilRate` and `ResetRecoilDivider`, shotgun min/max bounds, and `ShootingSpread` in ADS and on ordinary rifles remain open. Test intermediate values and other weapon families before assuming proportional scaling. Attachment interactions, runtime reconstruction after equipment changes and persistence also need production validation.
+
+## Runtime tests — 2026-09-08
+
+**Environment:** SurrounDead 0.8 / UE5.6; WeaponHandlingResearch Lua probes against live equipped components. Fixed-distance wall comparisons were requested with an attachment-free weapon; distance and attachment absence were not instrumented. Visual outcomes below are tester reports, not numerical impact measurements. Exact game patch and UE4SS build were not recorded.
+
+### Live captured baselines
+
+These are observed live baselines, not replacements for missing values in every cooked asset table. Named weapon identifiers are the actual pickup classes.
+
+| Field | HK416 | Benelli M4 |
+| --- | ---: | ---: |
+| Vertical recoil | −0.05 | −1.5 |
+| Horizontal recoil | 0.1 | 0.3 |
+| Vertical deviation | 0.015 | 0.5 |
+| Horizontal deviation | 0.025 | 0.15 |
+| HipfireSpread | 3 | 3 |
+| ShootingSpread | 0 | 3 |
+| RecoilRate | 2 | 3 |
+| ResetRecoilDivider | 1.5 | 1.5 |
+| ShotgunMinSpread | −25000 | −20000 |
+| ShotgunMaxSpread | 25000 | 20000 |
+| UseShotgunSpread? | false | true |
+
+### Comparisons and observations
+
+| Experiment | Controlled change | Visual result |
+| --- | --- | --- |
+| HK416 vertical recoil | Baseline `−0.05` to `−2`; other monitored values retained | Much stronger upward kick. An earlier zero test verified writable state but did not establish a visual result. |
+| HK416 horizontal recoil | `+2` versus `−2`; normal vertical recoil/deviation retained | Positive pulled up-left; negative pulled right. Residual upward movement is consistent with unchanged negative vertical recoil. |
+| HK416 deviation, ADS | A: all four recoil/deviation values zero. B: only horizontal deviation raised to `1` | A: steady aim, consistent hits. B: left/right aim movement; single shots returned towards starting aim, rapid fire wandered. |
+| HK416 deviation, hip-fire | Same A/B; HipfireSpread stayed `3`, ShootingSpread stayed `0` | A: impacts scattered. B: sideways aim movement plus broad impact scatter during full auto. |
+| HK416 hip-fire spread | A: HipfireSpread `3`. B: `0`. All recoil/deviation zero; ShootingSpread `0` | A: scattered impacts. B: almost pinpoint grouping. |
+| Benelli M4 shooting spread, hip-fire | A: ShootingSpread `0`. B: `3`. HipfireSpread and all recoil/deviation zero; shotgun bounds fixed at `−20000 / +20000` | A: tight spot. B: grouping widened again. Three `Svr_WeaponShot` events logged for each condition. |
+
+### Evidence and limits
+
+Initial HK416 logs pasted in the conversation at `11:59–12:00` and `14:15` verify capture and sampled recoil writes. The exaggerated vertical and positive-horizontal directions are tester observations; the negative-horizontal test also has live readback at `−2` during two logged shots.
+
+Uploaded log sources (times are recorded as printed, without timezone conversion):
+
+| Source | Relevant time | Evidence |
+| --- | --- | --- |
+| `Pasted text(1).txt` | 14:22:52–14:23:09 | HK416 standard reset, deviation A/B and event readbacks; tester identified this as ADS. |
+| `Pasted text(2).txt` | 14:26:46–14:27:12 | Hip-fire repeat of deviation A/B; manual baseline restore logged. Also contains earlier ADS entries. |
+| `Pasted text(3).txt` | 14:54:20–14:54:42 | HK416 HipfireSpread `3` versus `0`, matching sampled values and manual restore. |
+| `Pasted text(4).txt` | 15:01:21–15:01:27 onward | Benelli baseline, ShootingSpread `0` versus `3`, matching firing snapshots. Tester subsequently confirmed hip-fire and wider grouping in B; excerpt has no final restore. |
+
+`LIVE` values match the selected targets in the sampled comparisons. Polling and post-hooks do not exclude a transient change between samples. `StartRecoil` can appear multiple times relative to `Svr_WeaponShot`; event counters must not be treated as bullet/pellet counts. The experiments establish observable effects, not exact units, distribution, formulas or behaviour on all weapon types.
 
 ## Rifles
 
@@ -245,12 +298,12 @@ Explicitly serialized on `Default__BP_WeaponsPickupComponent_C` in `/Game/Invent
 | Crit chance | `Jig.Stat.CriticalHitChance` | Raw bounds; conversion to a probability has not been established here. |
 | RPM | `Jig.Stat.FirearmRPM` | Rate-of-fire stat bounds; omitted records are not zero RPM. |
 | Falloff | `Jig.Stat.DamageFallOff` | Raw falloff bounds; distance units and curve require runtime verification. |
-| V recoil | `RecoilData.RecoilVertical` | Signed vertical recoil parameter. |
-| H recoil | `RecoilData.RecoilHorizontal` | Signed horizontal recoil parameter. |
-| V deviation | `RecoilData.VerticalRandomDeviation` | Vertical random-deviation parameter. |
-| H deviation | `RecoilData.HorizontalRandomDeviation` | Horizontal random-deviation parameter. |
-| Hip spread | `HipfireSpread` | Hip-fire spread parameter; final trajectory effect remains to be measured. |
-| Shooting spread | `ShootingSpread` | Shooting-spread parameter; not yet established as ADS-only accuracy. |
+| V recoil | `RecoilData.RecoilVertical` | Signed kick; negative caused upward movement on HK416; positive untested. |
+| H recoil | `RecoilData.RecoilHorizontal` | Signed kick; positive left / negative right on tested HK416. |
+| V deviation | `RecoilData.VerticalRandomDeviation` | Vertical deviation candidate; independent test outstanding. |
+| H deviation | `RecoilData.HorizontalRandomDeviation` | Varying sideways aim movement, demonstrated independently of base recoil. |
+| Hip spread | `HipfireSpread` | Controls tested HK416 hip-fire grouping: 3 scattered, 0 almost pinpoint. |
+| Shooting spread | `ShootingSpread` | Controls tested Benelli hip-fire grouping: 0 tight, 3 wider; ADS untested. |
 | Recoil rate | `RecoilRate` | Recoil behaviour parameter; direction of improvement needs testing. |
 | Reset divider | `ResetRecoilDivider` | Recoil-reset parameter; direction of improvement needs testing. |
 | Shotgun bounds | `ShotgunMinSpread` / `ShotgunMaxSpread` | Separate signed spread bounds used alongside the shotgun-spread flag. |
@@ -271,6 +324,6 @@ Source archive SHA-256 (`Items.zip`): `f87a6051868e9831fb5d0bed62af10f7cfd809e47
 
 ## Implications for WeaponProgression
 
-The existing UID tracking, milestone/config logic and UI can be reused to select and display deterministic bonuses. Damage/crit/RPM/falloff use the already researched item-stat route. Handling fields live on weapon components and need a separate runtime probe before promising working recoil or accuracy upgrades.
+The existing UID tracking, milestone/config logic and UI can be reused to select and display deterministic bonuses. Damage/crit/RPM/falloff use the already researched item-stat route. WeaponHandlingResearch has now demonstrated live component writes and observable recoil, horizontal-deviation and spread effects. Production integration still needs attachment/equip lifecycle and persistence validation.
 
-For that probe, capture the equipped instance's effective baseline, test a small change to one field, measure firing behaviour, then check weapon swaps and attachments. If scaling signed recoil, scaling toward zero preserves its sign (for example, −0.35 × 0.9 = −0.315). Do not repeatedly compound bonuses onto an already modified value or mutate a shared class default. The safe direction for `RecoilRate` and `ResetRecoilDivider`, inheritance resolution and persistence all remain research tasks.
+For integration, capture the equipped instance's effective baseline and verify reconstruction after weapon swaps and attachment changes. If scaling signed recoil, scaling toward zero preserves its sign (for example, −0.35 × 0.9 = −0.315). Do not repeatedly compound bonuses onto an already modified value or mutate a shared class default. The safe direction for `RecoilRate` and `ResetRecoilDivider`, inheritance resolution and persistence all remain research tasks.

@@ -4,6 +4,14 @@
 
 > This page documents **SurrounDead runtime behaviour** discovered while investigating and building original UE4SS tooling against SurrounDead 0.8 / Unreal Engine 5.6. Third-party mod source/implementation is not reproduced here.
 
+## Live handling-component writes — 2026-09-08
+
+🟢 **Confirmed in the tested runtime** — WeaponHandlingResearch resolves the local player's `BP_JigHelperComp:GetActiveWeapon` output, accesses the actor's `BP_WeaponsPickupComponent`, and checks that the component belongs to that actor. Direct numeric writes to `RecoilData` members, `HipfireSpread` and `ShootingSpread` read back successfully at sampled firing/recoil events.
+
+The tests distinguish this component route from the `ItemStats` / `UpdateStatByUID` path below. HK416 directional recoil, independent horizontal-deviation aim movement, HK416 hip-fire dispersion and Benelli M4 hip-fire shooting spread all produced observed gameplay changes. See [the canonical weapon reference](weapons.md#runtime-tests--2026-09-08) for exact values, comparisons and evidence limits.
+
+Manual captured-baseline restoration and a standard HK416 reset were logged successfully. Standard reset used previously observed live HK416 values and was restricted to that weapon class; it was not a generic reset for all guns. The supplied Benelli excerpt does not show final restoration. Handling persistence, attachment/equipment lifecycle behaviour and shared-state effects beyond these selected live components are not established by these tests.
+
 ## Physical weapon identity
 
 🟢 **Confirmed** — `/Game/JigSInventory/Jigsaw/Components/BP_JigHelperComp.BP_JigHelperComp_C:GetEquipmentUID` exposes an `FGuid` for the currently used equipment slot. Immediately before the firearm damage path, this GUID identifies the specific physical weapon instance rather than merely the weapon type.

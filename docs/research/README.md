@@ -19,6 +19,8 @@ This directory separates findings by confidence and keeps unresolved questions v
 
 ## Current highlights
 
+🟢 Live handling tests now demonstrate HK416 recoil directions, independent horizontal-deviation aim movement, HK416 hip-fire spread and Benelli M4 shooting spread during hip-fire. See [test conditions and results](weapons.md#runtime-tests--2026-09-08).
+
 🟢 Oodle wrapper/decompression has been reproduced on examined saves.
 
 🟢 Core `Player.sav` progression values can be located structurally rather than with fixed offsets.
