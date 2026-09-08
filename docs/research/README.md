@@ -19,7 +19,13 @@ This directory separates findings by confidence and keeps unresolved questions v
 
 ## Current highlights
 
-🟢 Live handling tests now demonstrate HK416 recoil directions, independent horizontal-deviation aim movement, HK416 hip-fire spread and Benelli M4 shooting spread during hip-fire. See [test conditions and results](weapons.md#runtime-tests--2026-09-08).
+🟢 **Confirmed:** live handling tests now demonstrate HK416 recoil directions, independent horizontal-deviation aim movement, HK416 hip-fire spread and Benelli M4 shooting spread during hip-fire. See [test conditions and results](weapons.md#runtime-tests--2026-09-08).
+
+🟡 **Probable:** intermediate parameter reductions will support useful progression bonuses; the amount of gameplay improvement is not yet measured.
+
+🔵 **Research:** positive vertical recoil, vertical deviation, recovery controls, shotgun bounds, spread formulas and production handling persistence.
+
+🔴 **Failed / obsolete:** the initial positive-horizontal-means-right assumption and an ADS-only interpretation of Benelli `ShootingSpread`; live tests superseded both.
 
 🟢 Oodle wrapper/decompression has been reproduced on examined saves.
 

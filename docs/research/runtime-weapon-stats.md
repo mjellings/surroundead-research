@@ -10,7 +10,9 @@
 
 The tests distinguish this component route from the `ItemStats` / `UpdateStatByUID` path below. HK416 directional recoil, independent horizontal-deviation aim movement, HK416 hip-fire dispersion and Benelli M4 hip-fire shooting spread all produced observed gameplay changes. See [the canonical weapon reference](weapons.md#runtime-tests--2026-09-08) for exact values, comparisons and evidence limits.
 
-Manual captured-baseline restoration and a standard HK416 reset were logged successfully. Standard reset used previously observed live HK416 values and was restricted to that weapon class; it was not a generic reset for all guns. The supplied Benelli excerpt does not show final restoration. Handling persistence, attachment/equipment lifecycle behaviour and shared-state effects beyond these selected live components are not established by these tests.
+🟢 **Confirmed — restoration:** manual captured-baseline restoration and a standard HK416 reset were logged successfully. Standard reset used previously observed live HK416 values and was restricted to that weapon class; it was not a generic reset for all guns. The supplied Benelli excerpt does not show final restoration.
+
+🔵 **Research:** handling persistence, attachment/equipment lifecycle behaviour and shared-state effects beyond these selected live components are not established by these tests.
 
 ## Physical weapon identity
 

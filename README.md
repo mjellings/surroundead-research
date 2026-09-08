@@ -22,6 +22,8 @@ This repository collects practical findings from save-file reverse engineering a
 | 🔵 **Research** | Active or unresolved research target. |
 | 🔴 **Failed / obsolete** | Tested approach that did not work or has been superseded. |
 
+Apply markers to the specific claim or table row, not an entire mixed-confidence page. **Confirmed** means proven within the stated test conditions; it does not establish every weapon, build, formula or unit. Keep interpretations **Probable**, untested behaviour **Research**, and superseded conclusions **Failed / obsolete**. Pair each colour with its text label so meaning does not depend on colour alone.
+
 Failed experiments are intentionally retained. Knowing what *doesn't* work can be valuable when reverse engineering.
 
 ## Start here

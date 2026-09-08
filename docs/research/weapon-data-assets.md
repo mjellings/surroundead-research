@@ -30,6 +30,8 @@ This is an important bridge between cooked item definitions, live `ItemStats`, a
 
 ## Conventional firearm ranges
 
+🟡 **Probable — cross-check-supported positional mapping; not every asset has been decoded by explicit stat tag.**
+
 The 45 conventional-weapon ranges are maintained in the [weapon reference](weapons.md#rifles). For assets with five records, the interpreted order is Damage / Crit Multiplier / Crit Chance / RPM / Falloff. Several manually cycled or bolt/pump weapons contain four records and omit RPM. The reference marks these omissions with `—`, not zero.
 
 ## Special weapons
@@ -45,6 +47,8 @@ The 45 conventional-weapon ranges are maintained in the [weapon reference](weapo
 This matters directly for progression/modding design: upgrades should be based on the weapon instance's live values or on normalized position within its vanilla range, rather than assuming every weapon of a given type starts with one fixed stat block.
 
 ## Next research
+
+🔵 **Research — outstanding verification.**
 
 - Decode the exact cooked `S_ItemStat` property schema rather than relying on the now-validated positional layout.
 - Collect multiple newly spawned copies of the same firearm to determine roll distribution and integer/float rounding behaviour.
