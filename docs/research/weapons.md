@@ -6,13 +6,42 @@ Vanilla **SurrounDead 0.8 / UE5.6** research, compiled 2026-09-08. Covers **49 f
 
 ## How to read the tables
 
-- **Base stats are generation ranges**, not a fixed starting value for every copy. Damage, crit, RPM and falloff below reproduce the 45 conventional-weapon records in [Weapon DataAsset Research](weapon-data-assets.md), including its live Crusher cross-check. The exact roll distribution remains unresolved.
+- **Base stats are generation ranges**, not a fixed starting value for every copy. Damage, crit, RPM and falloff below are the canonical tables for the 45 conventional-weapon records. [Weapon DataAsset Research](weapon-data-assets.md) preserves their extraction method and live Crusher cross-check. The exact roll distribution remains unresolved.
 - **Recoil/spread numbers are explicit cooked component values**, decoded from the uploaded `Items.zip` with the supplied UE5.6 `.usmap`. These are static asset observations, not proof of final in-game values or successful UE4SS writes.
 - **`—` means absent from the inspected record / unresolved**, never an assumed zero. A component can inherit a value. Shared defaults are listed separately below; the complete archetype chain and runtime initialization have not been resolved.
 - Recoil keeps its original sign. Values are internal units; no degree, percentage, metre or critical-damage formula is asserted here. `RecoilRate` is not weapon RPM. Shotgun damage is not asserted to be total damage across all pellets.
 - Names use asset identifiers for reliable lookup. `BarrettM821` is the DataAsset identifier; its pickup is `BP_BarrettM82Pickup`.
 
-Each category has a base-stat table followed by a handling table, avoiding one excessively wide table. **V/H recoil** and **V/H deviation** mean vertical/horizontal. The [field dictionary](#field-dictionary) gives exact property names.
+Each category has a base-stat table followed by a handling table, avoiding one excessively wide table. **V/H recoil** and **V/H deviation** mean vertical/horizontal. See [what spread and deviation mean](#what-spread-and-deviation-mean) for the practical interpretation, and the [field dictionary](#field-dictionary) for exact property names.
+
+## What spread and deviation mean
+
+The field names and serialized numbers are observed facts. The gameplay interpretations below are **working hypotheses from those names and their placement in the weapon component**, not traced Blueprint formulas or measured effects.
+
+| Concept | What it likely controls | What changing it might achieve |
+| --- | --- | --- |
+| Spread | How far a shot can depart from the aim direction. | A smaller spread parameter may tighten shot grouping, even while aim stays still. |
+| Vertical / horizontal recoil | The up/down and left/right kick associated with firing. | Reducing the magnitude may reduce aim displacement after a shot. |
+| Vertical / horizontal random deviation | Random variation in the recoil on each axis; these fields are inside `RecoilData`. | A smaller deviation may make kick more consistent from shot to shot, without removing the underlying recoil. |
+
+For example, **less spread** would be an accuracy reward; **less recoil deviation** would be a predictability reward. They should not be presented as interchangeable until firing tests establish how this game uses them.
+
+### Reading the numbers
+
+- **`HipfireSpread`** suggests spread when firing without aiming down sights. A value of `4` is a raw parameter, not a confirmed 4-degree cone or 4% inaccuracy.
+- **`ShootingSpread`** is a separate field. Its name does not establish that it is ADS-only spread, or whether it adds to, multiplies, or replaces hip-fire spread. Only four examined weapon exports explicitly override it, all shotgun-type weapons; omissions elsewhere do not prove perfect accuracy.
+- **`VerticalRandomDeviation` / `HorizontalRandomDeviation`** suggest random recoil variation on their respective axes. We have not established the sampling distribution, whether the bounds are ± the value, or whether variation is added or multiplied. Do not calculate a recoil interval from these numbers yet.
+- **Signed recoil:** compare magnitude when discussing kick. Moving `−0.35` toward zero to `−0.315` is a 10% reduction in the parameter's magnitude. Making it more negative would increase that magnitude. The observed sign alone does not establish the camera's direction of movement.
+- **Shotgun min/max spread:** these are another pair of signed bounds. A narrower pair suggests a tighter pellet pattern, but their coordinate space, units and relationship with the other spread fields are unresolved. `−17500 / 17500` is not a known angle or distance.
+- **`RecoilRate` / `ResetRecoilDivider`:** their names suggest recoil timing/recovery behaviour. We have not established whether raising or lowering either improves handling.
+
+### A concrete comparison
+
+HK416 explicitly stores vertical/horizontal recoil of `−0.05 / 0.1`, with deviations `0.015 / 0.025`. M249 stores `−0.35 / 0.35`, with deviations `0.05 / 0.025`. The M249 therefore has a larger serialized vertical recoil magnitude and vertical-deviation parameter. This does **not** establish that its visible kick is seven times greater: timing, attachments, inheritance and runtime calculations may change the outcome.
+
+### What still needs testing
+
+Hold the weapon, attachments, stance and firing conditions constant. Capture the live component values, then vary one field at a time: measure shot grouping separately from aim/camera movement and recovery. Test hip-fire and ADS separately, and compare repeated shots rather than one shot. Trace the consuming Blueprint logic to establish units and formulas. Until then, a “10% reduction” means 10% of the chosen parameter, not a verified 10% improvement in accuracy or handling.
 
 ## Rifles
 

@@ -1,8 +1,14 @@
 # Research Status
 
-[Weapon reference: base stats, recoil and spread](weapons.md)
-
 This directory separates findings by confidence and keeps unresolved questions visible.
+
+## Weapon documentation
+
+| Page | Use it for |
+| --- | --- |
+| [Weapon Reference](weapons.md) | All weapon tables, shared defaults, and spread/recoil explanations. |
+| [Weapon DataAsset Research](weapon-data-assets.md) | Extraction methods, the Crusher cross-check and unresolved stat mappings. |
+| [Runtime Weapon Stats](runtime-weapon-stats.md) | Reading/modifying live weapon stats, physical UIDs and persistence. |
 
 ## Confidence system
 

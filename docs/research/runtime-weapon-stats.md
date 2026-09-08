@@ -1,5 +1,7 @@
 # Runtime Weapon-Stat Research
 
+[Weapon reference — tables and handling explanations](weapons.md) · [DataAsset methods and validation](weapon-data-assets.md)
+
 > This page documents **SurrounDead runtime behaviour** discovered while investigating and building original UE4SS tooling against SurrounDead 0.8 / Unreal Engine 5.6. Third-party mod source/implementation is not reproduced here.
 
 ## Physical weapon identity
