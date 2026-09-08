@@ -1,0 +1,808 @@
+[
+  {
+    "asset": "Other/Components/BP_WeaponsPickupComponent.uasset",
+    "export": "Default__BP_WeaponsPickupComponent_C",
+    "consumed": 381,
+    "size": 385,
+    "tail": "00000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.2,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.2,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.1,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.1
+      },
+      "ResetRecoilDivider": 1.5,
+      "RecoilRate": 2.5,
+      "ShotgunMinSpread": -25000.0,
+      "ShotgunMaxSpread": 25000.0,
+      "HipfireSpread": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/BP_FirearmPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 2,
+    "size": 10,
+    "tail": "0000000000000000",
+    "props": {}
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/LMG/BP_M249Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 106,
+    "size": 114,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.35,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.35,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.05,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "RecoilRate": 2.0,
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/LMG/BP_XM250Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 91,
+    "size": 99,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.3,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.3,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.025,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Marksman/BP_CR308Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 107,
+    "size": 115,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.45,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.3,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.2
+      },
+      "RecoilRate": 2.0,
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Marksman/BP_FNFalPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 106,
+    "size": 114,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.55,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.4,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.2
+      },
+      "RecoilRate": 2.0,
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Marksman/BP_SVDPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 100,
+    "size": 108,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.3,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.15
+      },
+      "RecoilRate": 2.0,
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_BattleReadyGlockPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 127,
+    "size": 135,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.175,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.15,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.075,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.075
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_CerberusPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 106,
+    "size": 114,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.3,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.25,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.125,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.125
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_ColonelsRevengePickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 86,
+    "size": 94,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.15,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.35,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.075
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_CrusherPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 105,
+    "size": 113,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.35,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.15,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.025,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_DeadeyePickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 84,
+    "size": 92,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.0,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.3,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.2
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_ExterminatorPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 182,
+    "size": 190,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.95,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.85,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.15,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.15
+      },
+      "ResetRecoilDivider": 1.0,
+      "RecoilRate": 3.0,
+      "UseShotgunSpread?": 1,
+      "ShotgunMinSpread": -17500.0,
+      "ShotgunMaxSpread": 17500.0,
+      "ShootingSpread": 2.0,
+      "HipfireSpread": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_GuardianPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 57,
+    "size": 65,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.3
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_LechiePickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 152,
+    "size": 160,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.85,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 1.0,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.5,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.5
+      },
+      "ResetRecoilDivider": 1.0,
+      "RecoilRate": 1.5,
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_MarksmansLegacyPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 137,
+    "size": 145,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.75,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 1.75,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.75,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.75
+      },
+      "RecoilRate": 1.75,
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_PhantasmPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 101,
+    "size": 109,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.175,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.4,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.025,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_SurvivorPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 89,
+    "size": 97,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.4,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.1,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.15
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Named/BP_ValkyriePickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 86,
+    "size": 94,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.15,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.25,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.075
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_ACRPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 60,
+    "size": 68,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.4,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.05,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.05
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_AK15Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 96,
+    "size": 104,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.35,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.15,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.05,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.05
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_AK74Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 82,
+    "size": 90,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.5,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.15
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_AR15Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 70,
+    "size": 78,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.04,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.4,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.02
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_HK416Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 78,
+    "size": 86,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.05,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.1,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.015,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_KS1Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 95,
+    "size": 103,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.01,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.5,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.005,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "ResetRecoilDivider": 1.0,
+      "RecoilRate": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_M4CQBPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 52,
+    "size": 60,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.25,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.25
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_RadianMod1Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 78,
+    "size": 86,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.05,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.1,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.015,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_ScarHPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 84,
+    "size": 92,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.45,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.125,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.2
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Rifles/BP_SteyrAugPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 60,
+    "size": 68,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.4,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.05
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Shotgun/BP_BenelliM4Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 154,
+    "size": 162,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.5,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.3,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.5,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.15
+      },
+      "RecoilRate": 3.0,
+      "UseShotgunSpread?": 1,
+      "ShotgunMinSpread": -20000.0,
+      "ShotgunMaxSpread": 20000.0,
+      "ShootingSpread": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Shotgun/BP_PumpActionShotgunPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 174,
+    "size": 182,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -2.25,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.5,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.5,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.25
+      },
+      "ResetRecoilDivider": 2.0,
+      "RecoilRate": 3.0,
+      "UseShotgunSpread?": 1,
+      "ShootingSpread": 3.25,
+      "HipfireSpread": 3.25
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_BlackOpsUSPPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 109,
+    "size": 117,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.15,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.125
+      },
+      "RecoilRate": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_DeaglePickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 116,
+    "size": 124,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.0,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.2,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.15
+      },
+      "HipfireSpread": 4.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_G18Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 97,
+    "size": 105,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.175,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.25,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.125
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_M9Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 78,
+    "size": 86,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.175
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_MP7Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 112,
+    "size": 120,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.7,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.15,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.15,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.05
+      },
+      "RecoilRate": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_SawnOffShotgunPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 180,
+    "size": 188,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -2.25,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 1.25,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.25,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.25
+      },
+      "ResetRecoilDivider": 2.0,
+      "RecoilRate": 3.0,
+      "UseShotgunSpread?": 1,
+      "ShotgunMinSpread": -27500.0,
+      "ShotgunMaxSpread": 27500.0,
+      "ShootingSpread": 3.5,
+      "HipfireSpread": 3.5
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sidearm/BP_Winchester45Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 100,
+    "size": 108,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.35,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.3,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.25
+      },
+      "RecoilRate": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/SMG/BP_AR45Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 102,
+    "size": 110,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.1,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.15,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.05,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.05
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/SMG/BP_BlackOpsMP5Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 105,
+    "size": 113,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.04,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.4,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.01,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.15
+      },
+      "RecoilRate": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/SMG/BP_KrissVectorPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 94,
+    "size": 102,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.125,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.125,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.05
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/SMG/BP_MP5Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 94,
+    "size": 102,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.075,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.325,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.05
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/SMG/BP_P90Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 102,
+    "size": 110,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.3,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.4,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.15
+      },
+      "RecoilRate": 3.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sniper/BP_BarrettM82Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 130,
+    "size": 138,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -2.35,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.9,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.5,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.25
+      },
+      "ResetRecoilDivider": 2.0,
+      "RecoilRate": 2.0,
+      "HipfireSpread": 6.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sniper/BP_HuntingRiflePickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 141,
+    "size": 149,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.85,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.6,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.3
+      },
+      "ResetRecoilDivider": 2.0,
+      "RecoilRate": 1.75,
+      "HipfireSpread": 5.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sniper/BP_M2010Pickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 134,
+    "size": 142,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.75,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.8,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.2,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.2
+      },
+      "RecoilRate": 2.0,
+      "HipfireSpread": 5.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Sniper/BP_MosinNagantPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 143,
+    "size": 151,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -2.0,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.8,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.3,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.25
+      },
+      "ResetRecoilDivider": 2.0,
+      "RecoilRate": 1.75,
+      "HipfireSpread": 5.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Special/BP_CrossbowPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 53,
+    "size": 61,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": 0,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0
+      }
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Special/BP_FlareGunPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 110,
+    "size": 118,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": 0.5,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.5,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.25,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.25
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Special/BP_GrenadeLauncherPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 112,
+    "size": 120,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -1.5,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 1.0,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.5,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.5
+      },
+      "ResetRecoilDivider": 2.0
+    }
+  },
+  {
+    "asset": "Pickups/Weapons/Firearms/Special/BP_RocketLauncherPickup.uasset",
+    "export": "BP_WeaponsPickupComponent_GEN_VARIABLE",
+    "consumed": 104,
+    "size": 112,
+    "tail": "0000000000000000",
+    "props": {
+      "RecoilData": {
+        "RecoilVertical_21_C8295976496E0131B831FD9D404F09C1": -0.1,
+        "RecoilHorizontal_22_B0DAF3994641A2DCBF762BABA9097AFE": 0.1,
+        "VerticalRandomDeviation_25_D44DA64542DCF716F8F2A69369F4554B": 0.025,
+        "HorizontalRandomDeviation_27_56C9DAF44C44AC78FE3FC2AAF8B8EBC5": 0.025
+      },
+      "ResetRecoilDivider": 1.0
+    }
+  }
+]

@@ -1,5 +1,7 @@
 # SurrounDead Research
 
+[Weapon reference: base stats, recoil and spread](docs/research/weapons.md)
+
 Unofficial community reverse-engineering notes for **SurrounDead**, currently focused mainly on the **0.8 / Unreal Engine 5.6** era.
 
 This repository collects practical findings from save-file reverse engineering and live UE4SS investigation. The aim is to build a useful technical reference for understanding SurrounDead's save data, inventory/container structures, weapon stats, Unreal serialization and exposed runtime behaviour.

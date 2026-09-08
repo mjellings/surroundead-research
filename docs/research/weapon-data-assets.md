@@ -1,5 +1,7 @@
 # Weapon DataAsset Research
 
+[Combined weapon reference with recoil and spread](weapons.md)
+
 > Vanilla SurrounDead 0.8 / UE5.6 cooked-asset research. This page records derived observations only; no game assets are redistributed.
 
 ## Source and scope

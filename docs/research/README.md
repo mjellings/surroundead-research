@@ -1,5 +1,7 @@
 # Research Status
 
+[Weapon reference: base stats, recoil and spread](weapons.md)
+
 This directory separates findings by confidence and keeps unresolved questions visible.
 
 ## Confidence system
