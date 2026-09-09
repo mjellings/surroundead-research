@@ -152,27 +152,157 @@ UWorld:SpawnActor(BP_QuestGiver_C)
 → BP_QuestGiver_C:OnExecuteInteract
 → ctx:get() resolves the spawned NPC
 → spawned-NPC identity check succeeds
-→ existing Lua ui.lua module is loaded
+→ Lua gunsmith UI is loaded
 → custom UMG panel is shown
 ```
 
-The successful prototype displayed:
-
-```text
-DAVE'S GUNSMITH
-WEAPON PROGRESSION SERVICE
-Reroll progression bonuses (prototype)
-```
-
-The same research script could hide the UI and destroy only its own spawned NPC.
+The same research script can hide the UI and destroy only its own spawned NPC.
 
 This means a mod can reuse a native SurrounDead human NPC shell and native interaction prompt while replacing the service experience with its own Lua UMG, without requiring a custom cooked character or Widget Blueprint for the confirmed prototype.
 
-## Reusing a Lua UI module
+## Dedicated gunsmith UI
 
-🟢 The NPC prototype successfully loaded the existing Weapon Progression presentation module from a sibling UE4SS mod directory and displayed it after native NPC interaction.
+🟢 The original compact Weapon Progression card was sufficient to prove the handoff but was too small for a service screen. It was superseded by a dedicated gunsmith UI constructed directly from Lua.
 
-An initial relative-path assumption failed because UE4SS's process working directory was not the mod script directory. The working approach derives the currently executing script path and resolves the sibling mod from there.
+🟢 A later card-layout rewrite removed the nested `Border → Canvas` geometry dependency that caused child content and the action button to extend beyond the visible panel. The current prototype uses one root Canvas coordinate space for the frame, text, dividers, stat rows and action button.
+
+🟢 The current tested panel displays:
+
+- weapon name
+- weapon level
+- mastery rank
+- base → effective Damage
+- base → effective Critical Hit Multiplier
+- base → effective Critical Hit Chance
+- base → effective RPM
+- base → effective Damage Falloff
+- reroll service text
+- an interactive `REROLL` button
+
+The panel has been visually verified in-game with a tracked Crusher at Level 13 / Proven II.
+
+## UI input capture and lifecycle
+
+🟢 Merely showing a mouse cursor was not sufficient for an interactive service panel. The first mouse click could pass through to normal game input and fire the held weapon.
+
+🟢 The tested fix uses `WidgetBlueprintLibrary` input-mode functions when opening the gunsmith UI. `UIOnly` successfully captures UI input in the tested build, and normal `GameOnly` input is restored when the panel closes.
+
+Observed log sequence:
+
+```text
+[DaveGunsmith.UI] input mode | UIOnly
+...
+[DaveGunsmith.UI] input mode | GameOnly restored
+```
+
+🟢 ESC closes the panel and restores game input.
+
+🟢 Proximity-close behaviour has also been reproduced: moving more than roughly 5 m from the spawned gunsmith closes the service UI.
+
+🟢 A no-firearm service response can be shown and auto-closed after approximately three seconds.
+
+### Interaction-key debounce
+
+🔴 A global F-to-close keybind initially consumed the same F press that opened the QuestGiver service panel, causing the UI to open and immediately close.
+
+🟢 The current research build arms F-to-close only after a short delay following successful handoff, preventing the opening interaction press from being interpreted as a close request.
+
+## Weapon Progression bridge
+
+Duplicating Weapon Progression's active-weapon resolver inside the NPC mod proved unreliable, particularly when the player loaded a save with a firearm already equipped.
+
+🔴 The duplicated resolver path was therefore superseded.
+
+🟢 Weapon Progression now remains the authoritative owner of active-weapon resolution and publishes a small read-only cross-mod snapshot (`active_weapon.api`).
+
+The proven read path is:
+
+```text
+WeaponProgression active-weapon resolver
+→ physical weapon UID + progression record
+→ active_weapon.api
+→ gunsmith reads snapshot
+→ gunsmith UI displays exact tracked weapon
+```
+
+🟢 The gunsmith has successfully read a tracked Crusher with a stable physical UID and correct level, kills and mastery rank.
+
+🟢 A startup UID bootstrap was added to Weapon Progression so an already-equipped tracked firearm can be resolved without requiring the player to switch weapons first. The tested tracked-weapon path now works when approaching the NPC directly after load.
+
+## Authoritative reroll service
+
+🟢 **Confirmed:** the current prototype performs a real weapon-progression reroll from the gunsmith UI.
+
+The NPC mod does **not** write Weapon Progression's database directly. Instead:
+
+```text
+player clicks REROLL
+→ gunsmith writes reroll.request
+→ WeaponProgression validates the physical UID and eligibility
+→ WeaponProgression rerolls ordinary progression rewards
+→ WeaponProgression saves authoritative data
+→ existing live-stat reconciliation runs
+→ active_weapon.api is refreshed
+→ gunsmith refreshes the displayed stats
+```
+
+This preserves the ownership boundary: Weapon Progression owns progression state and mutation; the NPC mod is a client/service UI.
+
+### Preserved state
+
+🟢 The tested reroll preserves:
+
+- physical weapon UID
+- captured/base stats
+- level
+- XP
+- kills
+- mastery rank
+- deterministic milestone bonuses
+
+Only the ordinary random progression upgrade distribution is rerolled.
+
+### Ordinary reward count
+
+🟢 Runtime testing resolved an earlier uncertainty. A Level 11 Crusher reported `rolls=10`, and a Level 13 Crusher reported 12 ordinary progression bonuses in the service UI.
+
+For the tested current Weapon Progression semantics:
+
+```text
+ordinary earned rewards = level - 1
+```
+
+This should still be treated as a property of the tested progression implementation rather than a vanilla SurrounDead rule.
+
+### Reroll generation rules
+
+🟢 The current reroll service preserves the existing number of ordinary rewards, then generates a new distribution using the same eligible-stat pool and the existing no-consecutive-stat rule when alternatives are available.
+
+🟢 The research implementation retries a reroll when the resulting distribution is identical to the previous one, avoiding an apparently successful reroll with no visible change where alternatives exist.
+
+### End-to-end runtime result
+
+🟢 The tested Crusher completed multiple consecutive rerolls successfully in one session.
+
+Observed sequence:
+
+```text
+REROLL REQUEST
+→ WeaponProgression ACTIVE API update
+→ GUNSMITH REROLL | SUCCESS
+→ WeaponProgression ACTIVE API update
+→ REROLL RESULT | SUCCESS
+```
+
+The panel then showed the newly reconciled effective stats.
+
+## Effective-stat display edge case
+
+🟢 Reroll testing exposed a formatting edge case once effective RPM exceeded 999. A displayed value such as `1,058.2614` was not accepted by a later numeric conversion because of the thousands separator.
+
+The production-side formatter was updated to sanitize comma-separated numeric text before conversion.
+
+This was a display/formatting issue, not a reroll or persistence failure.
 
 ## NPC display-name research
 
@@ -196,53 +326,38 @@ Lua string
 → live property write
 ```
 
-## Current gunsmith direction
+## Current gunsmith status
 
-🔵 The intended service is a weapon-progression reroll NPC.
+🟢 The gunsmith is now a functioning runtime service prototype rather than only an interaction/UI proof of concept.
 
-The current design is to preserve:
-
-- physical weapon UID
-- captured/base weapon stats
-- weapon level
-- XP
-- kills
-- mastery rank
-- deterministic milestone bonuses
-
-and reroll only the ordinary random progression reward history earned by that weapon.
-
-Conceptually:
+Current confirmed capabilities:
 
 ```text
-current weapon
-→ determine number of earned ordinary rewards
-→ replay ordinary reward selection rules
-→ generate a new upgrade distribution
-→ preserve milestone bonuses
-→ rebuild effective stats from authoritative base + ordinary + milestone data
+spawn native QuestGiver
+→ native SurrounDead interaction prompt
+→ identify exact spawned actor
+→ open dedicated Lua UMG gunsmith panel
+→ resolve exact held tracked firearm through WeaponProgression
+→ show full progression/effective stats
+→ capture mouse/UI input
+→ reroll ordinary progression bonuses
+→ persist through WeaponProgression's authoritative save path
+→ reconcile live weapon stats
+→ refresh the UI with new values
+→ close via ESC / distance / interaction lifecycle
 ```
 
-The exact number of ordinary rewards must be derived from the production progression semantics rather than assuming `level` or `level - 1`.
-
-🔵 A future UI should show the current weapon and its current progression distribution, then offer a controlled reroll/preview/accept path rather than immediately mutating the weapon.
-
-## UI limitation found in the first gunsmith prototype
-
-🔵 The existing compact Weapon Progression status card is sufficient to prove the NPC handoff but is not yet sized/layouted for the longer gunsmith service text. The prototype's `WEAPON PROGRESSION SERVICE` line overflowed the current panel width.
-
-This is a presentation issue rather than an interaction failure. A dedicated service layout or wider configurable panel is the next UI step.
+The reroll currently has no currency cost. This is intentional for the research prototype.
 
 ## Next research targets
 
 1. Find the actual property/data source used by the native QuestGiver interaction label so `Settlement Leader` can become `Dave`.
-2. Build a dedicated gunsmith service layout using the proven Lua UMG framework.
-3. Bridge the active physical weapon and Weapon Progression DB state into the service UI.
-4. Verify the exact ordinary-reward count for a weapon at each level.
-5. Generate a non-destructive proposed reroll and compare before/after distributions.
-6. Only after preview logic is proven, add acceptance, atomic DB persistence, live stat reconciliation and delayed verification.
-7. Add currency cost only after the reroll transaction itself is safe.
-8. Place the NPC at one of several hand-picked world coordinates on save/session load; ground placement and session persistence remain future work.
+2. Choose several hand-picked world coordinates for the gunsmith and spawn him at one selected location on save/session load.
+3. Decide whether the chosen spawn location should remain stable for a save/session and, if so, persist the selected location index.
+4. Add a currency cost only after a suitable native currency/payment path is identified and tested safely.
+5. Consider a confirmation or before/after preview step before a paid reroll.
+6. Continue cosmetic UI polish only where it improves native fit; the current card geometry and interaction flow are functional.
+7. Ground-placement tracing can be added later if hand-picked Z coordinates prove insufficient.
 
 ## Publication boundary
 
