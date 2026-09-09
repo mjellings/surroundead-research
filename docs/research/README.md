@@ -9,6 +9,7 @@ This directory separates findings by confidence and keeps unresolved questions v
 | [Weapon Reference](weapons.md) | All weapon tables, shared defaults, and spread/recoil explanations. |
 | [Weapon DataAsset Research](weapon-data-assets.md) | Extraction methods, the Crusher cross-check and unresolved stat mappings. |
 | [Runtime Weapon Stats](runtime-weapon-stats.md) | Reading/modifying live weapon stats, physical UIDs and persistence. |
+| [Runtime NPC Interaction](runtime-npc-interaction.md) | Runtime NPC spawning, QuestGiver/trader interaction hooks, custom UMG handoff and gunsmith research. |
 
 ## Confidence system
 
@@ -47,8 +48,18 @@ This directory separates findings by confidence and keeps unresolved questions v
 
 🟢 The tested standalone UI keeps presentation separate from authoritative mod state through a provider/state-table model and can be opened, refreshed and removed cleanly at runtime.
 
+🟢 Existing native NPC Blueprints can be spawned dynamically with UE4SS Lua. A tested supplies trader retained its normal native interaction/trading flow, while exact generic `BP_QuestGiver_C` and Settlement Officer actors also spawned successfully.
+
+🟢 The generic QuestGiver presents SurrounDead's native `[F] ... Talk To` interaction prompt. Its Blueprint hook callback context is a `RemoteUnrealParam`; `ctx:get()` resolves the actual actor, allowing a specific runtime-spawned NPC to be identified reliably when wrapper identity itself is not stable.
+
+🟢 Native NPC interaction can hand off into a custom Lua-created UMG service panel. The tested QuestGiver prototype opened the existing Weapon Progression UI module as a gunsmith panel after `OnExecuteInteract`, then cleanly removed only its own spawned NPC.
+
+🔵 Writing `VendorName = Dave` succeeds on the spawned QuestGiver but does not change the native prompt, which still displays `Settlement Leader`. The true source of the QuestGiver interaction label remains unresolved.
+
+🔵 The first gunsmith panel proves the interaction architecture, but its compact status-card layout is too narrow for longer service text. A dedicated service layout is the next UI step before implementing the progression-reroll transaction.
+
 🟡 `MainJigContainers` appears to use a less obvious serialization layout than its declared ArrayProperty count initially suggests.
 
-🔵 Remaining targets include stronger authority rules for duplicate populated live slots, exact vanilla XP-scaling provenance, more special-weapon layouts, equipment/attachment save mapping, broader tooltip/widget mapping, and interactive standalone UMG controls such as buttons, lists, images and focus/input handling.
+🔵 Remaining targets include stronger authority rules for duplicate populated live slots, exact vanilla XP-scaling provenance, more special-weapon layouts, equipment/attachment save mapping, broader tooltip/widget mapping, interactive standalone UMG controls such as buttons/lists/images/focus, QuestGiver display-name resolution, and a safe preview/accept weapon-progression reroll service.
 
-See the [Discovery Log](discovery-log.md), [Runtime Weapon Stats](runtime-weapon-stats.md), [Runtime Tooltip / UI Research](runtime-tooltip-ui.md) and [Standalone Lua UMG Research](runtime-standalone-ui.md) for consolidated technical details.
+See the [Discovery Log](discovery-log.md), [Runtime Weapon Stats](runtime-weapon-stats.md), [Runtime Tooltip / UI Research](runtime-tooltip-ui.md), [Standalone Lua UMG Research](runtime-standalone-ui.md) and [Runtime NPC Interaction](runtime-npc-interaction.md) for consolidated technical details.
